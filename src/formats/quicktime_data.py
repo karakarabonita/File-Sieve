@@ -1,6 +1,6 @@
 import os
 
-from file_data_util import write_to_file
+from util.file_data_util import write_to_file
 
 
 class QuickTimeData:

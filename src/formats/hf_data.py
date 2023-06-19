@@ -1,6 +1,6 @@
 import os
 
-from file_data_util import check_cross_sector_footer, write_to_file
+from util.file_data_util import check_cross_sector_footer, write_to_file
 
 
 class HFData:

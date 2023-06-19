@@ -1,5 +1,5 @@
-from file_data_util import check_cross_sector_footer
-from hf_data import HFData
+from util.file_data_util import check_cross_sector_footer
+from formats.hf_data import HFData
 
 
 class ZIPData(HFData):

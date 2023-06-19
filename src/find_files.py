@@ -1,12 +1,12 @@
 import os
 import os.path
 
-from bmp_data import find_bmp_file, BMP_START
-from hf_data import HFData
-from quicktime_data import QuickTimeData
-from riff_data import RIFFData
-from text_data import find_text_file
-from zip_data import ZIPData
+from formats.bmp_data import find_bmp_file, BMP_START
+from formats.hf_data import HFData
+from formats.quicktime_data import QuickTimeData
+from formats.riff_data import RIFFData
+from formats.text_data import find_text_file
+from formats.zip_data import ZIPData
 
 
 JPEG_START = b'\xff\xd8\xff'
