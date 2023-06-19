@@ -4,23 +4,9 @@ import os.path
 from formats.bmp_data import find_bmp_file, BMP_START
 from formats.hf_data import create_hf_types
 from formats.quicktime_data import QuickTimeData
-from formats.riff_data import RIFFData
+from formats.riff_data import create_riff_types
 from formats.text_data import find_text_file
 from formats.zip_data import ZIPData
-
-
-AVI_TYPE = b'AVI '
-WAV_TYPE = b'WAVE'
-
-
-def create_riff_types(output_path, chunk_name, types):
-    riff_types = [
-        RIFFData(AVI_TYPE, 'avi',
-                 os.path.join(output_path, 'AVIs', chunk_name)),
-        RIFFData(WAV_TYPE, 'wav',
-                 os.path.join(output_path, 'WAVs', chunk_name)),
-    ]
-    return list(filter(lambda riff_type: riff_type.ext in types, riff_types))
 
 
 MP4_SUB_TYPES = [

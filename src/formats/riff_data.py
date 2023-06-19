@@ -3,6 +3,20 @@ import os
 from util.file_data_util import write_to_file
 
 
+AVI_TYPE = b'AVI '
+WAV_TYPE = b'WAVE'
+
+
+def create_riff_types(output_path, chunk_name, types):
+    riff_types = [
+        RIFFData(AVI_TYPE, 'avi',
+                 os.path.join(output_path, 'AVIs', chunk_name)),
+        RIFFData(WAV_TYPE, 'wav',
+                 os.path.join(output_path, 'WAVs', chunk_name)),
+    ]
+    return list(filter(lambda riff_type: riff_type.ext in types, riff_types))
+
+
 class RIFFData:
     known_riff_types = [b'AVI ', b'WAVE']
 
