@@ -79,8 +79,8 @@ def find_files(chunk_path, output_path, types):
 
 def setup() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('filename')
-    parser.add_argument('outpath')
+    parser.add_argument('filename', type=str)
+    parser.add_argument('outpath', type=str)
     return parser.parse_args()
 
 
