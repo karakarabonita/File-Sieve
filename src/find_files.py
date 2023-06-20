@@ -81,11 +81,15 @@ def setup() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', type=str)
     parser.add_argument('outpath', type=str)
+    parser.add_argument('-t', '--types', default=[],
+                        type=lambda x: x.split(','))
+    parser.add_argument('-a', '--all', action='store_true')
     return parser.parse_args()
 
 
 def main(args: argparse.Namespace):
-    find_files(args.filename, args.outpath, ALL_TYPES)
+    types = ALL_TYPES if args.all else args.types
+    find_files(args.filename, args.outpath, types)
 
 
 if __name__ == '__main__':
