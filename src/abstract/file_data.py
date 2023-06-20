@@ -1,4 +1,4 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 import os
 
 
@@ -9,6 +9,6 @@ class FileData(ABC):
 
         os.makedirs(out_dir, exist_ok=make_new)
     
-    @abstractclassmethod
+    @abstractmethod
     def find_file(self, fp, sector, idx, chunk_path) -> bool:
         raise NotImplementedError
