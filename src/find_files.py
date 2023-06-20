@@ -3,35 +3,10 @@ import os.path
 
 from formats.bmp_data import find_bmp_file, BMP_START
 from formats.hf_data import create_hf_types
-from formats.quicktime_data import QuickTimeData
+from formats.quicktime_data import create_quicktime_types
 from formats.riff_data import create_riff_types
 from formats.text_data import find_text_file
 from formats.zip_data import ZIPData
-
-
-MP4_SUB_TYPES = [
-    b'avc1', b'iso2', b'isom', b'mmp4', b'mp41', b'mp42', b'mp71', b'msnv',
-    b'ndas', b'ndsc', b'ndsh', b'ndsm', b'ndsp', b'ndss', b'ndxc', b'ndxh',
-    b'ndxm', b'ndxp', b'ndxs',
-]
-M4A_SUB_TYPES = [b'M4A ']
-MOV_SUB_TYPES = [b'qt  ']
-M4V_SUB_TYPES = [b'M4V ']
-
-
-def create_quicktime_types(output_path, chunk_name, types):
-    quicktime_types = [
-        QuickTimeData(MP4_SUB_TYPES, 'mp4',
-                      os.path.join(output_path, 'MP4s', chunk_name)),
-        QuickTimeData(M4A_SUB_TYPES, 'm4a',
-                      os.path.join(output_path, 'M4As', chunk_name)),
-        QuickTimeData(MOV_SUB_TYPES, 'mov',
-                      os.path.join(output_path, 'MOVs', chunk_name)),
-        QuickTimeData(M4V_SUB_TYPES, 'm4v',
-                      os.path.join(output_path, 'M4Vs', chunk_name)),
-    ]
-    return list(filter(
-        lambda quicktime_type: quicktime_type.ext in types, quicktime_types))
 
 
 # Deliberately does not include 'txt'
