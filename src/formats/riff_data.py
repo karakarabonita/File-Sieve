@@ -1,5 +1,6 @@
 import os
 
+from abstract.file_data import FileData
 from util.file_data_util import write_to_file
 
 
@@ -17,7 +18,7 @@ def create_riff_types(output_path, chunk_name, types):
     return list(filter(lambda riff_type: riff_type.ext in types, riff_types))
 
 
-class RIFFData:
+class RIFFData(FileData):
     known_riff_types = [b'AVI ', b'WAVE']
 
     def __init__(self, file_type, ext, out_dir, make_new=True, data_max=5e10):

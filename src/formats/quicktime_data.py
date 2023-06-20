@@ -1,5 +1,6 @@
 import os
 
+from abstract.file_data import FileData
 from util.file_data_util import write_to_file
 
 
@@ -28,7 +29,7 @@ def create_quicktime_types(output_path, chunk_name, types):
         lambda quicktime_type: quicktime_type.ext in types, quicktime_types))
 
 
-class QuickTimeData:
+class QuickTimeData(FileData):
     known_ftyp_subtypes = set()
     signatures = set([
         b'ftyp', b'mdat', b'moov', b'pnot', b'udta', b'uuid', b'moof',

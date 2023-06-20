@@ -1,5 +1,6 @@
 import os
 
+from abstract.file_data import FileData
 from util.file_data_util import check_cross_sector_footer, write_to_file
 
 
@@ -31,7 +32,7 @@ def create_hf_types(output_path, chunk_name, types):
     return list(filter(lambda hf_type: hf_type.ext in types, hf_types))
 
 
-class HFData:
+class HFData(FileData):
     def __init__(self, header, footer, ext, out_dir, make_new=True):
         self.header = header
         self.footer = footer
