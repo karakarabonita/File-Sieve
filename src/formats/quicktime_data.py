@@ -45,7 +45,7 @@ class QuickTimeData:
         QuickTimeData.known_ftyp_subtypes |= set(subtypes)
         os.makedirs(out_dir, exist_ok=make_new)
     
-    def find_file(self, f, sector, idx, chunk_path):
+    def find_file(self, f, sector, idx):
         start_position = f.tell() - 512
         if sector[4:8] == b'ftyp' and sector[8:12] in self.subtypes:
             total_bytes = 0

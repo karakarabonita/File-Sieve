@@ -28,7 +28,7 @@ def passes_checks(sector):
     return not is_hex(sector) and is_valid(sector)
 
 
-def find_text_file(f, sector, idx, ext, chunk_path, output_path):
+def find_text_file(f, sector, idx, ext, output_path):
     start_position = f.tell() - 512
     byte_count = 0
     while passes_checks(sector):

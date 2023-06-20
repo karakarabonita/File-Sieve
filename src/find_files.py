@@ -6,7 +6,6 @@ from formats.hf_data import create_hf_types
 from formats.quicktime_data import create_quicktime_types
 from formats.riff_data import create_riff_types
 from formats.text_data import find_text_file
-from formats.zip_data import ZIPData
 
 
 # Deliberately does not include 'txt'
@@ -44,36 +43,34 @@ def find_files(chunk_path, output_path, types):
             found = False
             for hf_type in hf_types:
                 found = hf_type.find_file(
-                    f, sector, indices[hf_type], chunk_path)
+                    f, sector, indices[hf_type])
                 if found:
                     indices[hf_type] += 1
                     break
             
             for riff_type in riff_types:
                 found = riff_type.find_file(
-                    f, sector, indices[riff_type], chunk_path)
+                    f, sector, indices[riff_type])
                 if found:
                     indices[riff_type] += 1
                     break
             
             for quicktime_type in quicktime_types:
                 found = quicktime_type.find_file(
-                    f, sector, indices[quicktime_type], chunk_path)
+                    f, sector, indices[quicktime_type])
                 if found:
                     indices[quicktime_type] += 1
                     break
             
             if 'bmp' in types and not found:
                 found = find_bmp_file(
-                    f, sector, indices[BMP_START], 'bmp', chunk_path,
-                    bmp_output_path)
+                    f, sector, indices[BMP_START], 'bmp', bmp_output_path)
                 if found:
                     indices[BMP_START] += 1
             
             if 'txt' in types and not found:
                 found = find_text_file(
-                    f, sector, indices['txt'], 'txt', chunk_path,
-                    text_output_path)
+                    f, sector, indices['txt'], 'txt', text_output_path)
                 if found:
                     indices['txt'] += 1
             sector = f.read(512)

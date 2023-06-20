@@ -28,7 +28,7 @@ class RIFFData:
         self.total_bytes = 0
         os.makedirs(out_dir, exist_ok=make_new)
     
-    def find_file(self, f, sector, idx, chunk_path):
+    def find_file(self, f, sector, idx):
         start_position = f.tell() - 512
         if sector[:4] == b'RIFF' and sector[8:12] == self.file_type:
             # Add 8 to accommodate size of 'RIFF' and file_size

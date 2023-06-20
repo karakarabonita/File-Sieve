@@ -6,7 +6,7 @@ from util.file_data_util import write_to_file
 BMP_START = b'BM'
 
 
-def find_bmp_file(f, sector, idx, ext, chunk_path, output_path):
+def find_bmp_file(f, sector, idx, ext, output_path):
     sig_length = len(BMP_START)
     if sector[:sig_length] == BMP_START:
         start_position = f.tell() - 512
