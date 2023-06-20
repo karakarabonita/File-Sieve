@@ -1,3 +1,4 @@
+import argparse
 import os
 import os.path
 
@@ -74,3 +75,19 @@ def find_files(chunk_path, output_path, types):
                 if found:
                     indices['txt'] += 1
             sector = f.read(512)
+
+
+def setup() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filename')
+    parser.add_argument('outpath')
+    return parser.parse_args()
+
+
+def main(args: argparse.Namespace):
+    find_files(args.filename, args.outpath, ALL_TYPES)
+
+
+if __name__ == '__main__':
+    args = setup()
+    main(args)
