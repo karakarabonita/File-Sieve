@@ -30,8 +30,6 @@ def find_files(chunk_path, output_path, types):
 
     text_output_path = os.path.join(output_path, 'TEXT', chunk_name)
     os.makedirs(text_output_path, exist_ok=True)
-
-    indices = {BMP_START: 0, 'txt': 0}
     
     with open(chunk_path, mode='rb') as f:
         sector = f.read(512)
@@ -54,15 +52,11 @@ def find_files(chunk_path, output_path, types):
             
             if 'bmp' in types and not found:
                 found = find_bmp_file(
-                    f, sector, indices[BMP_START], 'bmp', bmp_output_path)
-                if found:
-                    indices[BMP_START] += 1
+                    f, sector, 'bmp', bmp_output_path)
             
             if 'txt' in types and not found:
                 found = find_text_file(
-                    f, sector, indices['txt'], 'txt', text_output_path)
-                if found:
-                    indices['txt'] += 1
+                    f, sector, 'txt', text_output_path)
             sector = f.read(512)
 
 

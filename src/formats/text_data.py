@@ -1,3 +1,4 @@
+from itertools import count
 import os
 
 from util.file_data_util import write_to_file
@@ -7,6 +8,8 @@ NULL_SECTOR = b'\x00' * 512
 VALID_CHARS = b'\x00\t\n\r !"%&\'(),./0123456789?' + \
               b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 HEX_CHARS = b'\00\t\n\r ABCDEFabcdef0123456789'
+
+_id_counter = count()
 
 
 def is_valid(sector):
@@ -28,7 +31,7 @@ def passes_checks(sector):
     return not is_hex(sector) and is_valid(sector)
 
 
-def find_text_file(f, sector, idx, ext, output_path):
+def find_text_file(f, sector, ext, output_path):
     start_position = f.tell() - 512
     byte_count = 0
     while passes_checks(sector):
@@ -38,7 +41,8 @@ def find_text_file(f, sector, idx, ext, output_path):
         sector = f.read(512)
 
     if 0 < byte_count <= 100_000:
-        file_path = os.path.join(output_path, f'file{idx}.{ext}')
+        id = next(_id_counter)
+        file_path = os.path.join(output_path, f'file{id}.{ext}')
         write_to_file(f, start_position, byte_count, file_path)
         return True
     elif byte_count > 100_000:
