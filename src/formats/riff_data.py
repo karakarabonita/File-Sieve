@@ -39,7 +39,8 @@ class RIFFData(FileData):
             self.total_bytes += file_size
             
             if self.total_bytes <= self.data_max:
-                file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
+                id = next(self.id_counter)
+                file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
                 write_to_file(f, start_position, file_size, file_path)
             else:
                 print(f'maximum data exceeded, skipping file at {hex(start_position)}...')

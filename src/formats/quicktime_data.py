@@ -65,7 +65,8 @@ class QuickTimeData(FileData):
                 f.seek(chunk_size - 8, 1)
                 chunk_header = f.read(8)
             
-            file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
+            id = next(self.id_counter)
+            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
             write_to_file(f, start_position, total_bytes, file_path)
             f.seek(start_position + 512)
             return True

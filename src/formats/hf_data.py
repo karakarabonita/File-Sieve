@@ -71,7 +71,8 @@ class HFData(FileData):
                 print('ran out of data before finding end of image')
                 return False
             
-            file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
+            id = next(self.id_counter)
+            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
             write_to_file(f, start_position, byte_count, file_path)
             f.seek(start_position + 512)
             return True
