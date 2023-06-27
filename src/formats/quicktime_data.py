@@ -39,10 +39,10 @@ class QuickTimeData(FileData):
     ])
 
     def __init__(self, subtypes, ext, out_dir, make_new=True):
-        super().__init__(out_dir, make_new=make_new)
+        super().__init__(out_dir, ext, make_new=make_new)
 
         self.subtypes = subtypes
-        self.ext = ext
+        
 
         QuickTimeData.known_ftyp_subtypes |= set(subtypes)
     

@@ -34,11 +34,10 @@ def create_hf_types(output_path, chunk_name, types):
 
 class HFData(FileData):
     def __init__(self, header, footer, ext, out_dir, make_new=True):
-        super().__init__(out_dir, make_new=make_new)
+        super().__init__(out_dir, ext, make_new=make_new)
 
         self.header = header
         self.footer = footer
-        self.ext = ext
 
     def check_file_end(self, f, sector):
         byte_count = 0

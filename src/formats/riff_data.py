@@ -22,10 +22,9 @@ class RIFFData(FileData):
     known_riff_types = [b'AVI ', b'WAVE']
 
     def __init__(self, file_type, ext, out_dir, make_new=True, data_max=5e10):
-        super().__init__(out_dir, make_new=make_new)
+        super().__init__(out_dir, ext, make_new=make_new)
 
         self.file_type = file_type
-        self.ext = ext
         self.data_max = int(data_max)
         self.total_bytes = 0
     
