@@ -39,14 +39,14 @@ class QuickTimeData(FileData):
     ])
 
     def __init__(self, subtypes, ext, out_dir, make_new=True):
+        super().__init__(out_dir, make_new=make_new)
+
         self.subtypes = subtypes
         self.ext = ext
-        self.out_dir = out_dir
 
         QuickTimeData.known_ftyp_subtypes |= set(subtypes)
-        os.makedirs(out_dir, exist_ok=make_new)
     
-    def find_file(self, f, sector, idx):
+    def find_file(self, f, sector):
         start_position = f.tell() - 512
         if sector[4:8] == b'ftyp' and sector[8:12] in self.subtypes:
             total_bytes = 0
@@ -65,7 +65,7 @@ class QuickTimeData(FileData):
                 f.seek(chunk_size - 8, 1)
                 chunk_header = f.read(8)
             
-            file_path = os.path.join(self.out_dir, f'file{idx}.{self.ext}')
+            file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
             write_to_file(f, start_position, total_bytes, file_path)
             f.seek(start_position + 512)
             return True

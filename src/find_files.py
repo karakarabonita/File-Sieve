@@ -20,47 +20,36 @@ def find_files(chunk_path, output_path, types):
     _, chunk_name = os.path.split(chunk_path)
 
     hf_types = create_hf_types(output_path, chunk_name, types)
-    indices = {hf_type: 0 for hf_type in hf_types}
 
     riff_types = create_riff_types(output_path, chunk_name, types)
-    indices = {**indices, **{riff_type: 0 for riff_type in riff_types}}
 
     quicktime_types = create_quicktime_types(output_path, chunk_name, types)
-    indices = {
-        **indices, **{quicktime_type: 0 for quicktime_type in quicktime_types}
-    }
     
     bmp_output_path = os.path.join(output_path, 'BMPs', chunk_name)
     os.makedirs(bmp_output_path, exist_ok=True)
-    indices[BMP_START] = 0
 
     text_output_path = os.path.join(output_path, 'TEXT', chunk_name)
     os.makedirs(text_output_path, exist_ok=True)
-    indices['txt'] = 0
+
+    indices = {BMP_START: 0, 'txt': 0}
     
     with open(chunk_path, mode='rb') as f:
         sector = f.read(512)
         while len(sector) > 0:
             found = False
             for hf_type in hf_types:
-                found = hf_type.find_file(
-                    f, sector, indices[hf_type])
+                found = hf_type.find_file(f, sector)
                 if found:
-                    indices[hf_type] += 1
                     break
             
             for riff_type in riff_types:
-                found = riff_type.find_file(
-                    f, sector, indices[riff_type])
+                found = riff_type.find_file(f, sector)
                 if found:
-                    indices[riff_type] += 1
                     break
             
             for quicktime_type in quicktime_types:
-                found = quicktime_type.find_file(
-                    f, sector, indices[quicktime_type])
+                found = quicktime_type.find_file(f, sector)
                 if found:
-                    indices[quicktime_type] += 1
                     break
             
             if 'bmp' in types and not found:

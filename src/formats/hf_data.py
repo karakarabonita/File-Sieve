@@ -34,11 +34,11 @@ def create_hf_types(output_path, chunk_name, types):
 
 class HFData(FileData):
     def __init__(self, header, footer, ext, out_dir, make_new=True):
+        super().__init__(out_dir, make_new=make_new)
+
         self.header = header
         self.footer = footer
         self.ext = ext
-        self.out_dir = out_dir
-        os.makedirs(out_dir, exist_ok=make_new)
 
     def check_file_end(self, f, sector):
         byte_count = 0
@@ -63,7 +63,7 @@ class HFData(FileData):
     passed in (i.e., a call to f.read() will not miss or double-read any
     bytes after a call to this function).
     """
-    def find_file(self, f, sector, idx):
+    def find_file(self, f, sector):
         if sector[:len(self.header)] == self.header:
             start_position = f.tell() - 512
             found, byte_count = self.check_file_end(f, sector)
@@ -72,7 +72,7 @@ class HFData(FileData):
                 print('ran out of data before finding end of image')
                 return False
             
-            file_path = os.path.join(self.out_dir, f'file{idx}.{self.ext}')
+            file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
             write_to_file(f, start_position, byte_count, file_path)
             f.seek(start_position + 512)
             return True

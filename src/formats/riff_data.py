@@ -22,14 +22,14 @@ class RIFFData(FileData):
     known_riff_types = [b'AVI ', b'WAVE']
 
     def __init__(self, file_type, ext, out_dir, make_new=True, data_max=5e10):
+        super().__init__(out_dir, make_new=make_new)
+
         self.file_type = file_type
         self.ext = ext
-        self.out_dir = out_dir
         self.data_max = int(data_max)
         self.total_bytes = 0
-        os.makedirs(out_dir, exist_ok=make_new)
     
-    def find_file(self, f, sector, idx):
+    def find_file(self, f, sector):
         start_position = f.tell() - 512
         if sector[:4] == b'RIFF' and sector[8:12] == self.file_type:
             # Add 8 to accommodate size of 'RIFF' and file_size
@@ -40,7 +40,7 @@ class RIFFData(FileData):
             self.total_bytes += file_size
             
             if self.total_bytes <= self.data_max:
-                file_path = os.path.join(self.out_dir, f'file{idx}.{self.ext}')
+                file_path = os.path.join(self.out_dir, f'file{self.id_counter}.{self.ext}')
                 write_to_file(f, start_position, file_size, file_path)
             else:
                 print(f'maximum data exceeded, skipping file at {hex(start_position)}...')
