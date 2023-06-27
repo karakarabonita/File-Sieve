@@ -2,6 +2,7 @@ import argparse
 import os
 import os.path
 
+from abstract.file_data import FileData
 from formats.bmp_data import find_bmp_file, BMP_START
 from formats.hf_data import create_hf_types
 from formats.quicktime_data import create_quicktime_types
@@ -19,11 +20,11 @@ ALL_TYPES = [
 def find_files(chunk_path, output_path, types):
     _, chunk_name = os.path.split(chunk_path)
 
-    hf_types = create_hf_types(output_path, chunk_name, types)
-
-    riff_types = create_riff_types(output_path, chunk_name, types)
-
-    quicktime_types = create_quicktime_types(output_path, chunk_name, types)
+    file_finders: list[FileData] = [
+        *create_hf_types(output_path, chunk_name, types),
+        *create_riff_types(output_path, chunk_name, types),
+        *create_quicktime_types(output_path, chunk_name, types),
+    ]
     
     bmp_output_path = os.path.join(output_path, 'BMPs', chunk_name)
     os.makedirs(bmp_output_path, exist_ok=True)
@@ -35,20 +36,9 @@ def find_files(chunk_path, output_path, types):
         sector = f.read(512)
         while len(sector) > 0:
             found = False
-            for hf_type in hf_types:
-                found = hf_type.find_file(f, sector)
-                if found:
-                    break
-            
-            for riff_type in riff_types:
-                found = riff_type.find_file(f, sector)
-                if found:
-                    break
-            
-            for quicktime_type in quicktime_types:
-                found = quicktime_type.find_file(f, sector)
-                if found:
-                    break
+            finder: FileData
+            for finder in file_finders:
+                finder.find_file(f, sector)
             
             if 'bmp' in types and not found:
                 found = find_bmp_file(
