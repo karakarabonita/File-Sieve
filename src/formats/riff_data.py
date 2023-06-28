@@ -1,21 +1,26 @@
 import os
+from collections import namedtuple
 
 from abstract.file_data import FileData
 from util.file_data_util import write_to_file
 
 
-AVI_TYPE = b'AVI '
-WAV_TYPE = b'WAVE'
+RIFFTypeInfo = namedtuple('RIFFTypeInfo', ['name', 'extension', 'riff_code'])
+
+AVI_INFO = RIFFTypeInfo('AVI', 'avi', b'AVI ')
+WAV_INFO = RIFFTypeInfo('WAV', 'wav', b'WAVE')
+
+RIFF_INFO = [AVI_INFO, WAV_INFO]
 
 
 def create_riff_types(output_path, chunk_name, types):
+    info_filtered = filter(lambda info: info.extension in types, RIFF_INFO)
     riff_types = [
-        RIFFData(AVI_TYPE, 'avi',
-                 os.path.join(output_path, 'AVIs', chunk_name)),
-        RIFFData(WAV_TYPE, 'wav',
-                 os.path.join(output_path, 'WAVs', chunk_name)),
+        RIFFData(info.riff_code, info.extension,
+                 os.path.join(output_path, info.name, chunk_name))
+        for info in info_filtered
     ]
-    return list(filter(lambda riff_type: riff_type.ext in types, riff_types))
+    return riff_types
 
 
 class RIFFData(FileData):
