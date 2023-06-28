@@ -1,35 +1,33 @@
 import os
+from collections import namedtuple
 
 from abstract.file_data import FileData
 from util.file_data_util import check_cross_sector_footer, write_to_file
 
 
-JPEG_START = b'\xff\xd8\xff'
-JPEG_END = b'\xff\xd9'
-PNG_START = b'\x89\x50\x4e\x47\x0d\x0a\x1a\x0a'
-PNG_END = b'\x49\x45\x4E\x44\xAE\x42\x60\x82'
-GM81_START = b'\x91\xD5\x12\x00\x2A\x03\x00\x00'
-GM81_END = b'Extension Packages\x00\x00\x00\x00'
-GIF_START = b'GIF8'
-GIF_END = b';'
-PDF_START = b'%PDF'
-PDF_END = b'%%EOF'
+HFTypeInfo = namedtuple(
+    'HFTypeInfo',
+    ['name', 'extension', 'header', 'footer'])
+
+JPEG_INFO = HFTypeInfo('JPEG', 'jpg',  b'\xff\xd8\xff', b'\xff\xd9')
+PNG_INFO = HFTypeInfo('PNG', 'png', b'\x89\x50\x4e\x47\x0d\x0a\x1a\x0a',
+                      b'\x49\x45\x4E\x44\xAE\x42\x60\x82')
+GM81_INFO = HFTypeInfo('GM81', 'gm81', b'\x91\xD5\x12\x00\x2A\x03\x00\x00',
+                       b'Extension Packages\x00\x00\x00\x00')
+GIF_INFO = HFTypeInfo('GIF', 'gif', b'GIF8', b';')
+PDF_INFO = HFTypeInfo('PDF', 'pdf', b'%PDF', b'%%EOF')
+
+HF_INFO = [JPEG_INFO, PNG_INFO, GM81_INFO, GIF_INFO, PNG_INFO]
 
 
 def create_hf_types(output_path, chunk_name, types):
+    info_filtered = filter(lambda info: info.extension in types, HF_INFO)
     hf_types = [
-        HFData(JPEG_START, JPEG_END, 'jpg', 
-               os.path.join(output_path, 'JPEGs', chunk_name)),
-        HFData(PNG_START, PNG_END, 'png',
-               os.path.join(output_path, 'PNGs', chunk_name)),
-        HFData(GM81_START, GM81_END, 'gm81',
-               os.path.join(output_path, 'GM81s', chunk_name)),
-        HFData(GIF_START, GIF_END, 'gif',
-               os.path.join(output_path, 'GIFs', chunk_name)),
-        HFData(PDF_START, PDF_END, 'pdf',
-               os.path.join(output_path, 'PDFs', chunk_name)),
+        HFData(info.header, info.footer, info.extension, 
+               os.path.join(output_path, info.name, chunk_name)) 
+        for info in info_filtered
     ]
-    return list(filter(lambda hf_type: hf_type.ext in types, hf_types))
+    return hf_types
 
 
 class HFData(FileData):
