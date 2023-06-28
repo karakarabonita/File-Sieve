@@ -1,32 +1,33 @@
 import os
+from collections import namedtuple
 
 from abstract.file_data import FileData
 from util.file_data_util import write_to_file
 
 
-MP4_SUB_TYPES = [
+QuickTimeTypeInfo = namedtuple('QuickTimeTypeInfo', ['name', 'extension', 'subtypes'])
+
+MP4_INFO = QuickTimeTypeInfo('MP4', 'mp4', [
     b'avc1', b'iso2', b'isom', b'mmp4', b'mp41', b'mp42', b'mp71', b'msnv',
     b'ndas', b'ndsc', b'ndsh', b'ndsm', b'ndsp', b'ndss', b'ndxc', b'ndxh',
     b'ndxm', b'ndxp', b'ndxs',
-]
-M4A_SUB_TYPES = [b'M4A ']
-MOV_SUB_TYPES = [b'qt  ']
-M4V_SUB_TYPES = [b'M4V ']
+])
+M4A_INFO = QuickTimeTypeInfo('M4A', 'm4a', [b'M4A '])
+MOV_INFO = QuickTimeTypeInfo('MOV', 'mov', [b'qt  '])
+M4V_INFO = QuickTimeTypeInfo('M4V', 'm4v', [b'M4V '])
+
+QUICKTIME_INFO = [MP4_INFO, M4A_INFO, MOV_INFO, M4V_INFO]
 
 
 def create_quicktime_types(output_path, chunk_name, types):
+    info_filtered = filter(lambda info: info.extension in types,
+                           QUICKTIME_INFO)
     quicktime_types = [
-        QuickTimeData(MP4_SUB_TYPES, 'mp4',
-                      os.path.join(output_path, 'MP4s', chunk_name)),
-        QuickTimeData(M4A_SUB_TYPES, 'm4a',
-                      os.path.join(output_path, 'M4As', chunk_name)),
-        QuickTimeData(MOV_SUB_TYPES, 'mov',
-                      os.path.join(output_path, 'MOVs', chunk_name)),
-        QuickTimeData(M4V_SUB_TYPES, 'm4v',
-                      os.path.join(output_path, 'M4Vs', chunk_name)),
+        QuickTimeData(info.subtypes, info.extension,
+               os.path.join(output_path, info.name, chunk_name)) 
+        for info in info_filtered
     ]
-    return list(filter(
-        lambda quicktime_type: quicktime_type.ext in types, quicktime_types))
+    return quicktime_types
 
 
 class QuickTimeData(FileData):
