@@ -1,6 +1,4 @@
 import argparse
-import os
-import os.path
 
 from abstract.file_finder import FileFinder
 from finders.bmp_finder import create_bmp_finder
@@ -18,8 +16,6 @@ ALL_TYPES = [
 
 
 def find_files(chunk_path, output_path, types):
-    _, chunk_name = os.path.split(chunk_path)
-
     file_finders: list[FileFinder] = [
         *create_hf_finders(output_path, types),
         *create_riff_finders(output_path, types),
