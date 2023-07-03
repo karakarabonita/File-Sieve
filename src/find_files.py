@@ -36,7 +36,9 @@ def find_files(chunk_path, output_path, types):
             found = False
             finder: FileData
             for finder in file_finders:
-                finder.find_file(f, sector)
+                found = finder.find_file(f, sector)
+                if found:
+                    break
             
             if 'txt' in types and not found:
                 found = find_text_file(
