@@ -3,7 +3,7 @@ import os
 import os.path
 
 from abstract.file_data import FileData
-from formats.bmp_data import find_bmp_file, BMP_START
+from formats.bmp_data import create_bmp_finder
 from formats.hf_data import create_hf_types
 from formats.quicktime_data import create_quicktime_types
 from formats.riff_data import create_riff_types
@@ -24,10 +24,8 @@ def find_files(chunk_path, output_path, types):
         *create_hf_types(output_path, chunk_name, types),
         *create_riff_types(output_path, chunk_name, types),
         *create_quicktime_types(output_path, chunk_name, types),
+        create_bmp_finder(output_path, chunk_name),
     ]
-    
-    bmp_output_path = os.path.join(output_path, 'BMPs', chunk_name)
-    os.makedirs(bmp_output_path, exist_ok=True)
 
     text_output_path = os.path.join(output_path, 'TEXT', chunk_name)
     os.makedirs(text_output_path, exist_ok=True)
@@ -39,10 +37,6 @@ def find_files(chunk_path, output_path, types):
             finder: FileData
             for finder in file_finders:
                 finder.find_file(f, sector)
-            
-            if 'bmp' in types and not found:
-                found = find_bmp_file(
-                    f, sector, 'bmp', bmp_output_path)
             
             if 'txt' in types and not found:
                 found = find_text_file(
