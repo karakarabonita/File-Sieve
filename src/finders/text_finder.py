@@ -1,7 +1,7 @@
 import os
 from itertools import count
 
-from abstract.file_data import FileFinder
+from abstract.file_finder import FileFinder
 from util.file_data_util import write_to_file
 
 

@@ -2,12 +2,12 @@ import argparse
 import os
 import os.path
 
-from abstract.file_data import FileFinder
-from formats.bmp_data import create_bmp_finder
-from formats.hf_data import create_hf_finders
-from formats.quicktime_data import create_quicktime_finders
-from formats.riff_data import create_riff_finders
-from formats.text_data import create_text_finder
+from abstract.file_finder import FileFinder
+from finders.bmp_finder import create_bmp_finder
+from finders.hf_finder import create_hf_finders
+from finders.quicktime_finder import create_quicktime_finders
+from finders.riff_finder import create_riff_finders
+from finders.text_finder import create_text_finder
 
 
 # Deliberately does not include 'txt'

@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 
-from abstract.file_data import FileFinder
+from abstract.file_finder import FileFinder
 from util.file_data_util import check_cross_sector_footer, write_to_file
 
 
