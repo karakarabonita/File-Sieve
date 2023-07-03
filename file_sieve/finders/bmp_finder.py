@@ -10,8 +10,8 @@ BMP_START = b'BM'
 _id_counter = count()
 
 
-def create_bmp_finder(output_path, chunk_name):
-    out_dir = os.path.join(output_path, 'BMP', chunk_name)
+def create_bmp_finder(output_path):
+    out_dir = os.path.join(output_path, 'BMP')
     return BMPFinder(out_dir, 'bmp')
 
 

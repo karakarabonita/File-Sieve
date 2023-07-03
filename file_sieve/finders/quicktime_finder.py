@@ -19,12 +19,12 @@ M4V_INFO = QuickTimeTypeInfo('M4V', 'm4v', [b'M4V '])
 QUICKTIME_INFO = [MP4_INFO, M4A_INFO, MOV_INFO, M4V_INFO]
 
 
-def create_quicktime_finders(output_path, chunk_name, types):
+def create_quicktime_finders(output_path, types):
     info_filtered = filter(lambda info: info.extension in types,
                            QUICKTIME_INFO)
     quicktime_types = [
         QuickTimeFinder(info.subtypes, info.extension,
-               os.path.join(output_path, info.name, chunk_name)) 
+               os.path.join(output_path, info.name))
         for info in info_filtered
     ]
     return quicktime_types

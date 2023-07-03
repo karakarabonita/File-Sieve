@@ -13,11 +13,11 @@ WAV_INFO = RIFFTypeInfo('WAV', 'wav', b'WAVE')
 RIFF_INFO = [AVI_INFO, WAV_INFO]
 
 
-def create_riff_finders(output_path, chunk_name, types):
+def create_riff_finders(output_path, types):
     info_filtered = filter(lambda info: info.extension in types, RIFF_INFO)
     riff_types = [
         RIFFFinder(info.riff_code, info.extension,
-                 os.path.join(output_path, info.name, chunk_name))
+                 os.path.join(output_path, info.name))
         for info in info_filtered
     ]
     return riff_types

@@ -21,11 +21,11 @@ def find_files(chunk_path, output_path, types):
     _, chunk_name = os.path.split(chunk_path)
 
     file_finders: list[FileFinder] = [
-        *create_hf_finders(output_path, chunk_name, types),
-        *create_riff_finders(output_path, chunk_name, types),
-        *create_quicktime_finders(output_path, chunk_name, types),
-        create_bmp_finder(output_path, chunk_name),
-        create_text_finder(output_path, chunk_name),
+        *create_hf_finders(output_path, types),
+        *create_riff_finders(output_path, types),
+        *create_quicktime_finders(output_path, types),
+        create_bmp_finder(output_path),
+        create_text_finder(output_path),
     ]
     
     with open(chunk_path, mode='rb') as f:

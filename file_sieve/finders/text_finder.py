@@ -32,8 +32,8 @@ def passes_checks(sector):
     return not is_hex(sector) and is_valid(sector)
 
 
-def create_text_finder(output_path, chunk_name):
-    out_dir = os.path.join(output_path, 'TXT', chunk_name)
+def create_text_finder(output_path):
+    out_dir = os.path.join(output_path, 'TXT')
     return TextData(out_dir, 'bmp')
 
 
