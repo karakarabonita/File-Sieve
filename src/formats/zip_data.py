@@ -1,8 +1,8 @@
 from util.file_data_util import check_cross_sector_footer
-from formats.hf_data import HFData
+from formats.hf_data import HFFinder
 
 
-class ZIPData(HFData):
+class ZIPData(HFFinder):
     header = b'\x50\x4B\x03\x04'
     footer = b'\x50\x4B\x05\x06'
     remainder_len = 18

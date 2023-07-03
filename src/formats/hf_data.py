@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from util.file_data_util import check_cross_sector_footer, write_to_file
 
 
@@ -23,14 +23,14 @@ HF_INFO = [JPEG_INFO, PNG_INFO, GM81_INFO, GIF_INFO, PNG_INFO]
 def create_hf_finders(output_path, chunk_name, types):
     info_filtered = filter(lambda info: info.extension in types, HF_INFO)
     hf_types = [
-        HFData(info.header, info.footer, info.extension, 
+        HFFinder(info.header, info.footer, info.extension, 
                os.path.join(output_path, info.name, chunk_name)) 
         for info in info_filtered
     ]
     return hf_types
 
 
-class HFData(FileData):
+class HFFinder(FileFinder):
     def __init__(self, header, footer, ext, out_dir, make_new=True):
         super().__init__(out_dir, ext, make_new=make_new)
 

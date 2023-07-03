@@ -1,7 +1,7 @@
 import os
 from itertools import count
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from util.file_data_util import write_to_file
 
 
@@ -12,10 +12,10 @@ _id_counter = count()
 
 def create_bmp_finder(output_path, chunk_name):
     out_dir = os.path.join(output_path, 'BMP', chunk_name)
-    return BMPData(out_dir, 'bmp')
+    return BMPFinder(out_dir, 'bmp')
 
 
-class BMPData(FileData):
+class BMPFinder(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new=make_new)
 

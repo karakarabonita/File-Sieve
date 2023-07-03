@@ -3,7 +3,7 @@ from itertools import count
 import os
 
 
-class FileData(ABC):
+class FileFinder(ABC):
     def __init__(self, out_dir, ext, make_new=True):
         self.out_dir = out_dir
         self.make_new = make_new

@@ -2,7 +2,7 @@ import argparse
 import os
 import os.path
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from formats.bmp_data import create_bmp_finder
 from formats.hf_data import create_hf_finders
 from formats.quicktime_data import create_quicktime_finders
@@ -20,7 +20,7 @@ ALL_TYPES = [
 def find_files(chunk_path, output_path, types):
     _, chunk_name = os.path.split(chunk_path)
 
-    file_finders: list[FileData] = [
+    file_finders: list[FileFinder] = [
         *create_hf_finders(output_path, chunk_name, types),
         *create_riff_finders(output_path, chunk_name, types),
         *create_quicktime_finders(output_path, chunk_name, types),
@@ -32,7 +32,7 @@ def find_files(chunk_path, output_path, types):
         sector = f.read(512)
         while len(sector) > 0:
             found = False
-            finder: FileData
+            finder: FileFinder
             for finder in file_finders:
                 found = finder.find_file(f, sector)
                 if found:

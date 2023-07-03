@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from util.file_data_util import write_to_file
 
 
@@ -23,14 +23,14 @@ def create_quicktime_finders(output_path, chunk_name, types):
     info_filtered = filter(lambda info: info.extension in types,
                            QUICKTIME_INFO)
     quicktime_types = [
-        QuickTimeData(info.subtypes, info.extension,
+        QuickTimeFinder(info.subtypes, info.extension,
                os.path.join(output_path, info.name, chunk_name)) 
         for info in info_filtered
     ]
     return quicktime_types
 
 
-class QuickTimeData(FileData):
+class QuickTimeFinder(FileFinder):
     known_ftyp_subtypes = set()
     signatures = set([
         b'ftyp', b'mdat', b'moov', b'pnot', b'udta', b'uuid', b'moof',
@@ -45,7 +45,7 @@ class QuickTimeData(FileData):
         self.subtypes = subtypes
         
 
-        QuickTimeData.known_ftyp_subtypes |= set(subtypes)
+        QuickTimeFinder.known_ftyp_subtypes |= set(subtypes)
     
     def find_file(self, f, sector):
         start_position = f.tell() - 512
@@ -60,7 +60,7 @@ class QuickTimeData(FileData):
             total_bytes += first_size
             f.seek(start_position + first_size)
             chunk_header = f.read(8)
-            while chunk_header[4:] in QuickTimeData.signatures:
+            while chunk_header[4:] in QuickTimeFinder.signatures:
                 chunk_size = int.from_bytes(chunk_header[:4], byteorder='big')
                 total_bytes += chunk_size
                 f.seek(chunk_size - 8, 1)
@@ -72,7 +72,7 @@ class QuickTimeData(FileData):
             f.seek(start_position + 512)
             return True
         elif sector[4:8] == b'ftyp' and \
-             sector[8:12] not in QuickTimeData.known_ftyp_subtypes:
+             sector[8:12] not in QuickTimeFinder.known_ftyp_subtypes:
             print(f'found unknown quicktime subtype {sector[8:12]}' + \
                   f' at {hex(start_position)}')
         return False

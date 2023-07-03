@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from util.file_data_util import write_to_file
 
 
@@ -16,14 +16,14 @@ RIFF_INFO = [AVI_INFO, WAV_INFO]
 def create_riff_finders(output_path, chunk_name, types):
     info_filtered = filter(lambda info: info.extension in types, RIFF_INFO)
     riff_types = [
-        RIFFData(info.riff_code, info.extension,
+        RIFFFinder(info.riff_code, info.extension,
                  os.path.join(output_path, info.name, chunk_name))
         for info in info_filtered
     ]
     return riff_types
 
 
-class RIFFData(FileData):
+class RIFFFinder(FileFinder):
     known_riff_types = [b'AVI ', b'WAVE']
 
     def __init__(self, file_type, ext, out_dir, make_new=True, data_max=5e10):
@@ -51,6 +51,6 @@ class RIFFData(FileData):
                 print(f'maximum data exceeded, skipping file at {hex(start_position)}...')
             f.seek(start_position + 512)
             return True
-        elif sector[:4] == b'RIFF' and sector[8:12] not in RIFFData.known_riff_types:
+        elif sector[:4] == b'RIFF' and sector[8:12] not in RIFFFinder.known_riff_types:
             print(f'unknown RIFF type {sector[8:12]} found at {hex(start_position)}')
         return False

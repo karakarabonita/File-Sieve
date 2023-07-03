@@ -1,7 +1,7 @@
 import os
 from itertools import count
 
-from abstract.file_data import FileData
+from abstract.file_data import FileFinder
 from util.file_data_util import write_to_file
 
 
@@ -37,7 +37,7 @@ def create_text_finder(output_path, chunk_name):
     return TextData(out_dir, 'bmp')
 
 
-class TextData(FileData):
+class TextData(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new)
 
