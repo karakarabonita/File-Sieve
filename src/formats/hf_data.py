@@ -20,7 +20,7 @@ PDF_INFO = HFTypeInfo('PDF', 'pdf', b'%PDF', b'%%EOF')
 HF_INFO = [JPEG_INFO, PNG_INFO, GM81_INFO, GIF_INFO, PNG_INFO]
 
 
-def create_hf_types(output_path, chunk_name, types):
+def create_hf_finders(output_path, chunk_name, types):
     info_filtered = filter(lambda info: info.extension in types, HF_INFO)
     hf_types = [
         HFData(info.header, info.footer, info.extension, 

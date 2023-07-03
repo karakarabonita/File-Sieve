@@ -4,9 +4,9 @@ import os.path
 
 from abstract.file_data import FileData
 from formats.bmp_data import create_bmp_finder
-from formats.hf_data import create_hf_types
-from formats.quicktime_data import create_quicktime_types
-from formats.riff_data import create_riff_types
+from formats.hf_data import create_hf_finders
+from formats.quicktime_data import create_quicktime_finders
+from formats.riff_data import create_riff_finders
 from formats.text_data import create_text_finder
 
 
@@ -21,9 +21,9 @@ def find_files(chunk_path, output_path, types):
     _, chunk_name = os.path.split(chunk_path)
 
     file_finders: list[FileData] = [
-        *create_hf_types(output_path, chunk_name, types),
-        *create_riff_types(output_path, chunk_name, types),
-        *create_quicktime_types(output_path, chunk_name, types),
+        *create_hf_finders(output_path, chunk_name, types),
+        *create_riff_finders(output_path, chunk_name, types),
+        *create_quicktime_finders(output_path, chunk_name, types),
         create_bmp_finder(output_path, chunk_name),
         create_text_finder(output_path, chunk_name),
     ]
