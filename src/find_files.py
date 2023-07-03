@@ -27,9 +27,6 @@ def find_files(chunk_path, output_path, types):
         create_bmp_finder(output_path, chunk_name),
         create_text_finder(output_path, chunk_name),
     ]
-
-    text_output_path = os.path.join(output_path, 'TEXT', chunk_name)
-    os.makedirs(text_output_path, exist_ok=True)
     
     with open(chunk_path, mode='rb') as f:
         sector = f.read(512)
