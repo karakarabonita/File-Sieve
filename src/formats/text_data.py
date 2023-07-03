@@ -1,6 +1,7 @@
-from itertools import count
 import os
+from itertools import count
 
+from abstract.file_data import FileData
 from util.file_data_util import write_to_file
 
 
@@ -31,21 +32,30 @@ def passes_checks(sector):
     return not is_hex(sector) and is_valid(sector)
 
 
-def find_text_file(f, sector, ext, output_path):
-    start_position = f.tell() - 512
-    byte_count = 0
-    while passes_checks(sector):
-        if sector == NULL_SECTOR:
-            break
-        byte_count += 512
-        sector = f.read(512)
+def create_text_finder(output_path, chunk_name):
+    out_dir = os.path.join(output_path, 'TXT', chunk_name)
+    return TextData(out_dir, 'bmp')
 
-    if 0 < byte_count <= 100_000:
-        id = next(_id_counter)
-        file_path = os.path.join(output_path, f'file{id}.{ext}')
-        write_to_file(f, start_position, byte_count, file_path)
-        return True
-    elif byte_count > 100_000:
-        print(f'text file over 100kb found ' + \
-              f'at {hex(start_position)}, skipping...')
-    return False
+
+class TextData(FileData):
+    def __init__(self, out_dir, ext, make_new=True):
+        super().__init__(out_dir, ext, make_new)
+
+    def find_file(self, f, sector):
+        start_position = f.tell() - 512
+        byte_count = 0
+        while passes_checks(sector):
+            if sector == NULL_SECTOR:
+                break
+            byte_count += 512
+            sector = f.read(512)
+
+        if 0 < byte_count <= 100_000:
+            id = next(_id_counter)
+            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
+            write_to_file(f, start_position, byte_count, file_path)
+            return True
+        elif byte_count > 100_000:
+            print(f'text file over 100kb found ' + \
+                f'at {hex(start_position)}, skipping...')
+        return False

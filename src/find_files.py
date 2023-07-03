@@ -7,7 +7,7 @@ from formats.bmp_data import create_bmp_finder
 from formats.hf_data import create_hf_types
 from formats.quicktime_data import create_quicktime_types
 from formats.riff_data import create_riff_types
-from formats.text_data import find_text_file
+from formats.text_data import create_text_finder
 
 
 # Deliberately does not include 'txt'
@@ -25,6 +25,7 @@ def find_files(chunk_path, output_path, types):
         *create_riff_types(output_path, chunk_name, types),
         *create_quicktime_types(output_path, chunk_name, types),
         create_bmp_finder(output_path, chunk_name),
+        create_text_finder(output_path, chunk_name),
     ]
 
     text_output_path = os.path.join(output_path, 'TEXT', chunk_name)
@@ -39,10 +40,6 @@ def find_files(chunk_path, output_path, types):
                 found = finder.find_file(f, sector)
                 if found:
                     break
-            
-            if 'txt' in types and not found:
-                found = find_text_file(
-                    f, sector, 'txt', text_output_path)
             sector = f.read(512)
 
 
