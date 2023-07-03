@@ -28,7 +28,7 @@ class BMPData(FileData):
             if file_size > 20_000_000:
                 return False
             id = next(_id_counter)
-            file_path = os.path.join(self.output_path, f'file{id}.{self.ext}')
+            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
             write_to_file(f, start_position, file_size, file_path)
             f.seek(start_position + 512)
             return True
