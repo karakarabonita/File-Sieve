@@ -8,13 +8,19 @@ class FileFinder(ABC):
         self.out_dir = out_dir
         self.make_new = make_new
         self.ext = ext
+        self.directory_exists = False
         self.id_counter = count()
-
-        os.makedirs(out_dir, exist_ok=make_new)
     
     def find_file(self, f, sector) -> bool:
+        self.ensure_directory()
         return self._find_file(f, sector)
     
     @abstractmethod
     def _find_file(self, f, sector) -> bool:
         raise NotImplementedError
+    
+    def ensure_directory(self):
+        if not self.directory_exists:
+            os.makedirs(self.out_dir, exist_ok=self.make_new)
+            self.directory_exists = True
+        
