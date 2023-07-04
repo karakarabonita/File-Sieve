@@ -60,7 +60,7 @@ class HFFinder(FileFinder):
     passed in (i.e., a call to f.read() will not miss or double-read any
     bytes after a call to this function).
     """
-    def find_file(self, f, sector):
+    def _find_file(self, f, sector):
         if sector[:len(self.header)] == self.header:
             start_position = f.tell() - 512
             found, byte_count = self.check_file_end(f, sector)

@@ -47,7 +47,7 @@ class QuickTimeFinder(FileFinder):
 
         QuickTimeFinder.known_ftyp_subtypes |= set(subtypes)
     
-    def find_file(self, f, sector):
+    def _find_file(self, f, sector):
         start_position = f.tell() - 512
         if sector[4:8] == b'ftyp' and sector[8:12] in self.subtypes:
             total_bytes = 0

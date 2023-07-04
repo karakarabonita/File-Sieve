@@ -41,7 +41,7 @@ class TextData(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new)
 
-    def find_file(self, f, sector):
+    def _find_file(self, f, sector):
         start_position = f.tell() - 512
         byte_count = 0
         while passes_checks(sector):

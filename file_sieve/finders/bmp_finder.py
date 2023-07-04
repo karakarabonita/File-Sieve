@@ -19,7 +19,7 @@ class BMPFinder(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new=make_new)
 
-    def find_file(self, f, sector):
+    def _find_file(self, f, sector):
         sig_length = len(BMP_START)
         if sector[:sig_length] == BMP_START:
             start_position = f.tell() - 512

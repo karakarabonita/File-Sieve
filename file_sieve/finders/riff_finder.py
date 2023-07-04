@@ -33,7 +33,7 @@ class RIFFFinder(FileFinder):
         self.data_max = int(data_max)
         self.total_bytes = 0
     
-    def find_file(self, f, sector):
+    def _find_file(self, f, sector):
         start_position = f.tell() - 512
         if sector[:4] == b'RIFF' and sector[8:12] == self.file_type:
             # Add 8 to accommodate size of 'RIFF' and file_size

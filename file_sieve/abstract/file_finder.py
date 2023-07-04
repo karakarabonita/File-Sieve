@@ -12,6 +12,9 @@ class FileFinder(ABC):
 
         os.makedirs(out_dir, exist_ok=make_new)
     
+    def find_file(self, f, sector) -> bool:
+        return self._find_file(f, sector)
+    
     @abstractmethod
-    def find_file(self, fp, sector) -> bool:
+    def _find_file(self, f, sector) -> bool:
         raise NotImplementedError
