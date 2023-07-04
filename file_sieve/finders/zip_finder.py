@@ -1,5 +1,5 @@
 from util.file_data_util import check_cross_sector_footer
-from formats.hf_finder import HFFinder
+from finders.hf_finder import HFFinder
 
 
 class ZIPFinder(HFFinder):
