@@ -1,6 +1,6 @@
+import os
 from abc import ABC, abstractmethod
 from itertools import count
-import os
 
 
 class FileFinder(ABC):
