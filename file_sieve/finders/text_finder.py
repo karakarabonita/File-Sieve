@@ -1,5 +1,6 @@
 import os
 from itertools import count
+from warnings import warn
 
 from abstract.file_finder import FileFinder
 from util.file_data_util import write_to_file
@@ -41,8 +42,13 @@ class TextData(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new)
 
-    def _check_signature(self, sector) -> bool:
-        return sector[:4] != b'\x00\x00\x00\x00'
+    def find_file(self, f, sector) -> bool:
+        # Override parent, since text files have no identifying signature
+        return self._find_file(f, sector)
+    
+    def _check_signature(self, _) -> bool:
+        warn("Text files have no signature; this function is always False.")
+        return False
     
     def _find_file(self, f, sector):
         start_position = f.tell() - 512
@@ -54,6 +60,7 @@ class TextData(FileFinder):
             sector = f.read(512)
 
         if 0 < byte_count <= 100_000:
+            self.ensure_directory()
             id = next(_id_counter)
             file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
             write_to_file(f, start_position, byte_count, file_path)
