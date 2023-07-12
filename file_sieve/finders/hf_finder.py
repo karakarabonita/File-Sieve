@@ -55,23 +55,24 @@ class HFFinder(FileFinder):
             byte_count += 512
         return False, 0
 
+    def _check_signature(self, sector) -> bool:
+        return sector[:len(self.header)] == self.header
+
     """
     Invariant: File pointer f is at the same position on return as when
     passed in (i.e., a call to f.read() will not miss or double-read any
     bytes after a call to this function).
     """
     def _find_file(self, f, sector):
-        if sector[:len(self.header)] == self.header:
-            start_position = f.tell() - 512
-            found, byte_count = self.check_file_end(f, sector)
+        start_position = f.tell() - 512
+        found, byte_count = self.check_file_end(f, sector)
 
-            if not found:
-                print('ran out of data before finding end of image')
-                return False
-            
-            id = next(self.id_counter)
-            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
-            write_to_file(f, start_position, byte_count, file_path)
-            f.seek(start_position + 512)
-            return True
-        return False
+        if not found:
+            print('ran out of data before finding end of image')
+            return False
+        
+        id = next(self.id_counter)
+        file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
+        write_to_file(f, start_position, byte_count, file_path)
+        f.seek(start_position + 512)
+        return True

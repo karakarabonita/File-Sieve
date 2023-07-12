@@ -12,9 +12,15 @@ class FileFinder(ABC):
         self.id_counter = count()
     
     def find_file(self, f, sector) -> bool:
-        self.ensure_directory()
-        return self._find_file(f, sector)
+        if self._check_signature(sector):
+            self.ensure_directory()
+            return self._find_file(f, sector)
+        return False
     
+    @abstractmethod
+    def _check_signature(self, sector) -> bool:
+        raise NotImplementedError
+
     @abstractmethod
     def _find_file(self, f, sector) -> bool:
         raise NotImplementedError

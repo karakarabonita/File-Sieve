@@ -44,35 +44,39 @@ class QuickTimeFinder(FileFinder):
 
         self.subtypes = subtypes
         
-
         QuickTimeFinder.known_ftyp_subtypes |= set(subtypes)
     
+    def _check_signature(self, sector) -> bool:
+        match (sector[4:8], sector[8:12]):
+            case (b'ftyp', x) if x in self.subtypes:
+                return True
+            case (b'ftyp', x) if x not in self.known_ftyp_subtypes:
+                print(f'found unknown quicktime subtype {sector[8:12]}')
+                return False
+            case _:
+                return False
+
+
     def _find_file(self, f, sector):
         start_position = f.tell() - 512
-        if sector[4:8] == b'ftyp' and sector[8:12] in self.subtypes:
-            total_bytes = 0
-            first_size = int.from_bytes(sector[:4], byteorder='big')
-            if first_size > 50_000:
-                print(f'large ftyp block ({first_size}) ' + \
-                      f'at {hex(start_position)}, skipping...')
-                return False
-            
-            total_bytes += first_size
-            f.seek(start_position + first_size)
+        total_bytes = 0
+        first_size = int.from_bytes(sector[:4], byteorder='big')
+        if first_size > 50_000:
+            print(f'large ftyp block ({first_size}) ' + \
+                    f'at {hex(start_position)}, skipping...')
+            return False
+        
+        total_bytes += first_size
+        f.seek(start_position + first_size)
+        chunk_header = f.read(8)
+        while chunk_header[4:] in QuickTimeFinder.signatures:
+            chunk_size = int.from_bytes(chunk_header[:4], byteorder='big')
+            total_bytes += chunk_size
+            f.seek(chunk_size - 8, 1)
             chunk_header = f.read(8)
-            while chunk_header[4:] in QuickTimeFinder.signatures:
-                chunk_size = int.from_bytes(chunk_header[:4], byteorder='big')
-                total_bytes += chunk_size
-                f.seek(chunk_size - 8, 1)
-                chunk_header = f.read(8)
-            
-            id = next(self.id_counter)
-            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
-            write_to_file(f, start_position, total_bytes, file_path)
-            f.seek(start_position + 512)
-            return True
-        elif sector[4:8] == b'ftyp' and \
-             sector[8:12] not in QuickTimeFinder.known_ftyp_subtypes:
-            print(f'found unknown quicktime subtype {sector[8:12]}' + \
-                  f' at {hex(start_position)}')
-        return False
+        
+        id = next(self.id_counter)
+        file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
+        write_to_file(f, start_position, total_bytes, file_path)
+        f.seek(start_position + 512)
+        return True

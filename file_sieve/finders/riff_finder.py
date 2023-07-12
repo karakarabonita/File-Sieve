@@ -33,24 +33,31 @@ class RIFFFinder(FileFinder):
         self.data_max = int(data_max)
         self.total_bytes = 0
     
+    def _check_signature(self, sector) -> bool:
+        match (sector[4:8], sector[8:12]):
+            case (b'RIFF', self.file_type):
+                return True
+            case (b'RIFF', x) if x not in self.known_riff_types:
+                print(f'found unknown RIFF type {sector[8:12]}')
+                return False
+            case _:
+                return False
+
     def _find_file(self, f, sector):
         start_position = f.tell() - 512
-        if sector[:4] == b'RIFF' and sector[8:12] == self.file_type:
-            # Add 8 to accommodate size of 'RIFF' and file_size
-            file_size = int.from_bytes(sector[4:8], byteorder='little') + 8
+        # Add 8 to accommodate size of 'RIFF' and file_size
+        file_size = int.from_bytes(sector[4:8], byteorder='little') + 8
 
-            if file_size > self.data_max:
-                print(f'file over {self.data_max} bytes found at {hex(start_position)}.')
-            self.total_bytes += file_size
-            
-            if self.total_bytes <= self.data_max:
-                id = next(self.id_counter)
-                file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
-                write_to_file(f, start_position, file_size, file_path)
-            else:
-                print(f'maximum data exceeded, skipping file at {hex(start_position)}...')
-            f.seek(start_position + 512)
-            return True
-        elif sector[:4] == b'RIFF' and sector[8:12] not in RIFFFinder.known_riff_types:
-            print(f'unknown RIFF type {sector[8:12]} found at {hex(start_position)}')
-        return False
+        if file_size > self.data_max:
+            print(f'file over {self.data_max} bytes found at {hex(start_position)}.')
+        self.total_bytes += file_size
+        
+        if self.total_bytes <= self.data_max:
+            id = next(self.id_counter)
+            file_path = os.path.join(self.out_dir, f'file{id}.{self.ext}')
+            write_to_file(f, start_position, file_size, file_path)
+        else:
+            print(f'maximum data exceeded, skipping file at {hex(start_position)}...')
+            return False
+        f.seek(start_position + 512)
+        return True

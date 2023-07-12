@@ -41,6 +41,9 @@ class TextData(FileFinder):
     def __init__(self, out_dir, ext, make_new=True):
         super().__init__(out_dir, ext, make_new)
 
+    def _check_signature(self, sector) -> bool:
+        return sector[:4] != b'\x00\x00\x00\x00'
+    
     def _find_file(self, f, sector):
         start_position = f.tell() - 512
         byte_count = 0
